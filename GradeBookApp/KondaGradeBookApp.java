@@ -1,3 +1,6 @@
+/*
+    Rakesh, K. (2021), CIS 505 Intermediate Java Programming. Bellevue University, all rights reserved.
+*/
 package GradeBookApp;
 
 import javafx.scene.control.TextArea;
