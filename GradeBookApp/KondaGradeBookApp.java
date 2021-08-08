@@ -1,9 +1,13 @@
+/*
+    Rakesh, K. (2021), CIS 505 Intermediate Java Programming. Bellevue University, all rights reserved.
+*/
 package GradeBookApp;
 
 import javafx.scene.control.TextArea;
+import GradeBookApp.Student;
+import java.io.IOException;
 import java.text.*;
 import java.text.SimpleDateFormat;
-import java.util.Calendar;
 import java.util.*;
 import javafx.application.*;
 import javafx.collections.*;
@@ -34,6 +38,7 @@ public class KondaGradeBookApp extends Application {
     Button clearButton = new Button("Clear");
     Button viewButton = new Button("View");
 	Button saveButton = new Button("Save");
+	TextArea area=new TextArea();
 	
  // Create an instance of SimpleDateFormat used for formatting 
  // the string representation of date (month/day/grade)
@@ -149,6 +154,9 @@ public class KondaGradeBookApp extends Application {
 		actionBtnContainer.getChildren().add(saveButton);
         gridPane.add(actionBtnContainer, 1, 6);
         
+        // Add Text Area
+        gridPane.add(area, 1, 7);
+        
         
         initialize();// calling the private methods to the onAction of the buttons.
 
@@ -158,31 +166,73 @@ public class KondaGradeBookApp extends Application {
     private void clearFormFields()
     {
 
-    	firstName.setText(null);
-    	lastName.setText(null);
-    	course.setText(null);
+    	firstName.setText("");
+    	lastName.setText("");
+    	course.setText("");
     	grade.setValue("");
+    	area.setText("");
     	
     }
     
     private void viewResults()
     {
     	System.out.println("I am view function");
+    	Set<Student> students=new HashSet<Student>();
+    	try {
+			students=KondsStream.viewGrades();
+			int counter=0;
+			String temp="";
+			for(Student lis : students) {
+				if(lis.getfName().equals("FirstName") || lis.getfName().equals(null))
+				{
+					System.out.print(lis+" "+counter+"\n");
+					System.out.print("Skipping");
+				}
+				else
+				{
+				temp=temp+""+lis.toString()+"\n";
+				counter++;
+				System.out.print(lis+" "+counter+"\n");
+				}
+				}
+			area.setText(temp);
+			
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+    	
+    	
 
     }
     
     private void saveResults()
     {
     	System.out.println("I am save function");
+    	String fName=firstName.getText();
+    	String lName=lastName.getText();
+    	String cour=course.getText();
+    	String grd=grade.getValue();
+    	if(firstName.getText().isEmpty() || lastName.getText().isEmpty() || course.getText().isEmpty() || grade.getValue().isEmpty()) 
+    	{
+    		System.out.println("Please fill values:");
+    	}
+    	else	
+    	{
+    	Student obj=new Student(fName, lName, cour, grd);
+    	KondsStream Stream=new KondsStream(obj);
+    	}
 
+    	
+    	
     }
     
     
     // the private methods to the onAction of the buttons
     public void initialize() {
     	clearButton.setOnAction(e -> clearFormFields());
-    	//viewButton.setOnAction(e -> viewResults());
-    	//saveButton.setOnAction(e -> saveResults());
+    	viewButton.setOnAction(e -> viewResults());
+    	saveButton.setOnAction(e -> saveResults());
     	
     }
 
